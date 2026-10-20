@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="tiendaonlineClaude">
+<meta name="theme-color" content="#1a2b3c">
+<title>tiendaonlineClaude</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; width: 100%; height: 100%; height: 100dvh; overflow: hidden; background: #1a2b3c; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  #app { position: fixed; inset: 0; background: #fff; padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px); }
+  iframe { display: block; width: 100%; height: 100%; border: 0; }
+  #loader { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; background: #1a2b3c; color: #eef2f5; font-size: 15px; transition: opacity .3s; }
+  #loader.hide { opacity: 0; pointer-events: none; }
+  .ring { width: 40px; height: 40px; border-radius: 50%; border: 3px solid rgba(255,255,255,.2); border-top-color: #eef2f5; animation: spin .8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .ring { animation-duration: 2s; } }
+  #fsBtn { position: fixed; right: calc(12px + env(safe-area-inset-right, 0px)); bottom: calc(76px + env(safe-area-inset-bottom, 0px)); width: 40px; height: 40px; border-radius: 50%; border: 0; background: rgba(0,0,0,.45); color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: .5; transition: opacity .2s; z-index: 10; }
+  #fsBtn:hover, #fsBtn:focus-visible { opacity: 1; outline: 2px solid #fff; }
+  #fsBtn[hidden] { display: none; }
+</style>
+</head>
+<body>
+  <div id="app">
+    <iframe id="frame"
+      src="https://www.appsheet.com/start/9a537013-37af-41c7-97b4-c9b5da552326#view=tiendaonlineClaude"
+      title="tiendaonlineClaude"
+      sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-downloads allow-storage-access-by-user-activation"
+      allow="camera; microphone; geolocation; clipboard-read; clipboard-write; fullscreen"
+      allowfullscreen></iframe>
+  </div>
+  <div id="loader"><div class="ring"></div><span>Loading…</span></div>
+  <button id="fsBtn" aria-label="Toggle full screen" title="Full screen">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+  </button>
+<script>
+  var loader = document.getElementById("loader");
+  document.getElementById("frame").addEventListener("load", function () { loader.classList.add("hide"); });
+  setTimeout(function () { loader.classList.add("hide"); }, 15000);
+  var root = document.documentElement;
+  var fsBtn = document.getElementById("fsBtn");
+  var canFS = root.requestFullscreen || root.webkitRequestFullscreen;
+  var installed = matchMedia("(display-mode: standalone), (display-mode: fullscreen)").matches || navigator.standalone;
+  if (!canFS || installed) fsBtn.hidden = true;
+  fsBtn.addEventListener("click", function () {
+    if (document.fullscreenElement || document.webkitFullscreenElement) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+    else (root.requestFullscreen || root.webkitRequestFullscreen).call(root);
+  });
+  var manifest = { name: "tiendaonlineClaude", short_name: "tiendaonlineClaude", start_url: location.href, scope: location.href.replace(/[^/]*$/, ""), display: "fullscreen", background_color: "#1a2b3c", theme_color: "#1a2b3c" };
+  var link = document.createElement("link");
+  link.rel = "manifest";
+  link.href = URL.createObjectURL(new Blob([JSON.stringify(manifest)], { type: "application/json" }));
+  document.head.appendChild(link);
+</script>
+</body>
+</html>
